@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Register</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet" type="text/css" media="all">
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+	<link href="//fonts.googleapis.com/css?family=Cuprum:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext,vietnamese" rel="stylesheet">
+	<link href="dist/css/bootstrap.css" rel="stylesheet">
+    <!-- Custom styles for this template 
+    <link href="signin.css" rel="stylesheet">-->
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	  
+    <![endif]-->
+	<script>
+	var userDetail=localStorage.getItem('nta')
+	if (userDetail==undefined)
+	{
+	window.location="index.html"
+	}
+	</script> 
+	
+  </head>
+
+ 
+  <body>
+<div class="">
+    <div class="about-bottom book-form col-md-offset-4">
+	<div class="row">
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <p> <h3> Welcome </h3></p>
+	  
+	<p> <span><a href="" class="btn btn-success btn-lg editProfile">Create Profile</a>  
+	<a href="" class="btn btn-danger btn-lg logout">Logout</a></p> </span>
+	  <p></p>
+	  <form id="profileForm" style="display:none">
+        <h2 class="form-signin-heading" style="text-align:center;">Enter Your Details</h2>
+		<div class="form-group">
+		<input type="text" name="firstName" id="firstName" placeholder="First Name" class="form-control" style="border-color:#F00">
+		</div>
+        <div class="form-group">
+		<input type="text" name="secondName" id="secondName" placeholder="Second Name" class="form-control" style="border-color:#F00">
+		</div>
+		<div class="form-group">
+		<input type="text" name="lastName" id="lastName" placeholder="Last Name" class="form-control" style="border-color:#F00">
+		</div>
+		<div class="form-group">
+		<input type="text" name="department" id="department" placeholder="Department" class="form-control" style="border-color:#F00">
+		</div>
+		<div class="form-group">
+		<input type="text" name="phone" id="phone" placeholder="Phone" class="form-control" style="border-color:#F00">
+		</div>
+		<div class="form-group">
+		<input type="email" name="email" id="email" placeholder="Email" class="form-control" style="border-color:#F00">
+		</div>
+		<div class="form-group">
+		<input type="password" name="password" id="password" placeholder="Password" class="form-control" style="border-color:#F00">
+		</div>
+		
+		
+		
+		<div class="form-group">
+		<a href="" class="btn btn-info btn-lg btn-block" id="saveProfile" >Save</a>
+		</div>
+        <!--<div class="form-group">
+		<input type="submit" class="btn btn-info btn-lg btn-block" value="Sign In &raquo; &radic;30 &laquo; &hearts; &Omega; ">
+		-->
+		</div>
+      </form>
+	  </div>
+
+    </div> <!-- /container -->
+</div>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+	<!--<script src="js/jquery-3.2.0.min.js"></script> -->
+	<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+	 <script>
+  
+	$("document").ready(function()
+	{
+	userDetail = JSON.parse(userDetail);
+	 //$(".username").text(userDetail.firstName + " "+  userDetail.lastName )
+	 $("#firstName").attr('value',userDetail.firstName )
+	 $("#secondName").attr('value',userDetail.secondName )
+	 $("#lastName").attr('value',userDetail.lastName )
+	 $("#department").attr('value',userDetail.department )
+	 $("#phone").attr('value',userDetail.phone )	
+	 $("#email").attr('value',userDetail.email )
+	 $("#password").attr('value',userDetail.password )
+	 userId = userDetail.userId
+
+	// Logout Function 
+	
+	$(".logout").click(function(){
+		localStorage.clear()
+		window.location="index.html"
+	})
+	
+	// Edit Profile 
+	
+	$(".editProfile").click(function(e){
+		e.preventDefault()
+		$("#profileForm").show(1000)
+	
+	})
+	
+	// Save Profile 
+	
+	$("#saveProfile").click(function(e){
+	e.preventDefault()
+		formData = {
+		firstName: $("#firstName").val(),
+		secondName: $("#secondName").val(),
+		lastName: $("#lastName").val(),
+		department: $("#department").val(),
+		phone: $("#phone").val(),
+		email: $("#email").val(),
+		password: $("#password").val()
+		}
+		//alert(JSON.stringify(formData))
+		
+		$.ajax({
+		url:"http://localhost/NTA/api.php/user/"+userId,
+		type:"PUT",
+		contentType: "application/json",
+		dataType:"json",
+		data: JSON.stringify(formData),
+		success:function(data){
+		//alert(data)
+			if(data){
+			  //get the new data 
+			  $.ajax({
+						url:"http://localhost/NTA/api.php/user/"+userId,
+						type:"GET",
+						contentType: "application/json",
+						dataType:"json",
+						data: JSON.stringify(formData),
+						success: function(data){
+						localStorage.setItem('nta',JSON.stringify(data))
+						window.location="register.html"
+						
+						//alert(JSON.stringify(data))
+						}
+						})
+				}
+			},
+			
+			error:function(){
+			alert("something went wrong")
+			
+		}
+	
+		})
+		
+		
+		
+	
+	})
+	
+	
+	
+	$("#signin").click(function(e){
+	e.preventDefault()
+		
+	email=$("#email").val();
+	password=$("#password").val();
+	if (email.length<1 || password.length<1){
+	//if (username==undefined|| password==undefined)
+	alert("your data is incomplete")
+	}
+	
+	else
+	{
+	$("#signin").html("<img src='img/load.gif'> Processing...")
+	$(this).attr("disabled",true)
+	$(this).attr("Anything","Something")
+	
+	}
+	$.ajax({
+		url:"http://localhost/NTA/api.php/user?satisfy=allfilter[]=email,eq,"+email+"&filter[]=password,eq,"+password+"&transform=1,",
+		type:"GET",
+		contentType: "application/json",
+		dataType:"json",
+		//data: JSON.stringify(formdata),
+		success:function(data){
+			//alert(data)
+			if(data.user.length<1)
+			{
+				alert("email or password incorrect")
+				}
+			else {
+			alert("welcome, you are now logged in as" +" "+ firstName)
+			}
+			window.location="comment.html";
+			$("#signin").prop("disabled",false)
+			//$("a#signUp").attr("disabled",false)
+	$("#signin").html("Sign Up &raquo")
+	$(this).attr("Anything","Something")
+			
+		},
+		error:function(){
+			alert("something went wrong")
+			
+		}
+	})
+	
+	
+	})
+	
+	
+	
+	})
+	
+	</script>
+    <div class="row">
+    <!--<div class="col-lg-11 glyphicon glyphicon-road">
+    <h2>come.....</h2>-->
+   
+    </div>
+    </div>
+  </body>
+</html>
